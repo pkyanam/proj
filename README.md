@@ -19,13 +19,13 @@ When running multiple AI coding agents (Claude Code, Cursor, etc.), you quickly 
 ### Quick Install (macOS/Linux)
 
 ```bash
-curl -fsSL https://raw.githubusercontent.com/your-username/proj/main/install.sh | bash
+curl -fsSL https://raw.githubusercontent.com/pkyanam/proj/main/install.sh | bash
 ```
 
 ### Install from Source
 
 ```bash
-git clone https://github.com/your-username/proj
+git clone https://github.com/pkyanam/proj
 cd proj
 cargo build --release
 cp target/release/proj target/release/proj-daemon ~/.local/bin/
