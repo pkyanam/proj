@@ -1,0 +1,52 @@
+[workspace]
+resolver = "2"
+members = [
+    "crates/proj-common",
+    "crates/proj-cli",
+    "crates/proj-daemon",
+]
+
+[workspace.package]
+version = "0.1.0"
+edition = "2021"
+license = "MIT"
+authors = ["Preetham"]
+
+[workspace.dependencies]
+# Async runtime
+tokio = { version = "1.35", features = ["full"] }
+
+# HTTP
+hyper = { version = "1.1", features = ["full"] }
+hyper-util = { version = "0.1", features = ["full"] }
+http-body-util = "0.1"
+
+# CLI
+clap = { version = "4.4", features = ["derive"] }
+
+# Serialization
+serde = { version = "1.0", features = ["derive"] }
+serde_json = "1.0"
+
+# Time
+chrono = { version = "0.4", features = ["serde"] }
+
+# Error handling
+anyhow = "1.0"
+thiserror = "1.0"
+
+# Logging
+tracing = "0.1"
+tracing-subscriber = { version = "0.3", features = ["env-filter"] }
+
+# Unix
+nix = { version = "0.27", features = ["process", "signal"] }
+
+# Directories
+dirs = "5.0"
+
+# UUID
+uuid = { version = "1.6", features = ["v4", "serde"] }
+
+# Internal crates
+proj-common = { path = "crates/proj-common" }

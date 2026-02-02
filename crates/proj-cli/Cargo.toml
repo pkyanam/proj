@@ -1,0 +1,19 @@
+[package]
+name = "proj-cli"
+version.workspace = true
+edition.workspace = true
+
+[[bin]]
+name = "proj"
+path = "src/main.rs"
+
+[dependencies]
+proj-common = { workspace = true }
+tokio = { workspace = true }
+clap = { workspace = true }
+serde = { workspace = true }
+serde_json = { workspace = true }
+anyhow = { workspace = true }
+tracing = { workspace = true }
+tracing-subscriber = { workspace = true }
+dirs = { workspace = true }
