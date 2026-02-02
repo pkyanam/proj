@@ -14,11 +14,19 @@ use uuid::Uuid;
 
 /// Event from a managed process
 #[derive(Debug, Clone)]
+#[allow(dead_code)]
 pub enum ProcessEvent {
     /// Process output (stdout or stderr)
-    Output { process_id: Uuid, line: String, is_stderr: bool },
+    Output {
+        process_id: Uuid,
+        line: String,
+        is_stderr: bool,
+    },
     /// Process exited
-    Exited { process_id: Uuid, exit_code: Option<i32> },
+    Exited {
+        process_id: Uuid,
+        exit_code: Option<i32>,
+    },
     /// Port detected
     PortDetected { process_id: Uuid, port: u16 },
 }
@@ -74,7 +82,7 @@ impl ProcessManager {
 
         let mut child = cmd.spawn().context("Failed to spawn process")?;
 
-        let pid = child.id().context("Failed to get process ID")? as u32;
+        let pid = child.id().context("Failed to get process ID")?;
 
         let info = ProcessInfo {
             id: process_id,
@@ -96,11 +104,13 @@ impl ProcessManager {
                 while let Ok(Some(line)) = lines.next_line().await {
                     // Print to daemon stdout for visibility
                     println!("[{}] {}", id, line);
-                    let _ = tx.send(ProcessEvent::Output {
-                        process_id: id,
-                        line,
-                        is_stderr: false,
-                    }).await;
+                    let _ = tx
+                        .send(ProcessEvent::Output {
+                            process_id: id,
+                            line,
+                            is_stderr: false,
+                        })
+                        .await;
                 }
             });
         }
@@ -115,11 +125,13 @@ impl ProcessManager {
                 while let Ok(Some(line)) = lines.next_line().await {
                     // Print to daemon stderr for visibility
                     eprintln!("[{}] {}", id, line);
-                    let _ = tx.send(ProcessEvent::Output {
-                        process_id: id,
-                        line,
-                        is_stderr: true,
-                    }).await;
+                    let _ = tx
+                        .send(ProcessEvent::Output {
+                            process_id: id,
+                            line,
+                            is_stderr: true,
+                        })
+                        .await;
                 }
             });
         }
@@ -131,10 +143,12 @@ impl ProcessManager {
         tokio::spawn(async move {
             let status = child_for_wait.wait().await;
             let exit_code = status.ok().and_then(|s| s.code());
-            let _ = tx.send(ProcessEvent::Exited {
-                process_id: id,
-                exit_code,
-            }).await;
+            let _ = tx
+                .send(ProcessEvent::Exited {
+                    process_id: id,
+                    exit_code,
+                })
+                .await;
         });
 
         // Start port detection
@@ -172,10 +186,9 @@ impl ProcessManager {
             for _ in 0..60 {
                 if let Some(port) = detect_port(pid).await {
                     tracing::info!("Detected port {} for process {}", port, process_id);
-                    let _ = tx.send(ProcessEvent::PortDetected {
-                        process_id,
-                        port,
-                    }).await;
+                    let _ = tx
+                        .send(ProcessEvent::PortDetected { process_id, port })
+                        .await;
                     return;
                 }
                 tokio::time::sleep(tokio::time::Duration::from_millis(500)).await;
@@ -206,6 +219,7 @@ impl ProcessManager {
     }
 
     /// Get mutable process info
+    #[allow(dead_code)]
     pub fn get_mut(&mut self, process_id: Uuid) -> Option<&mut ProcessInfo> {
         self.processes.get_mut(&process_id).map(|m| &mut m.info)
     }
@@ -247,10 +261,13 @@ impl ProcessManager {
     }
 
     /// Find process by project name (returns the most recent running one)
+    #[allow(dead_code)]
     pub fn find_by_project(&self, project_name: &str) -> Option<&ProcessInfo> {
         self.processes
             .values()
-            .filter(|m| m.info.project_name == project_name && m.info.status == ProcessStatus::Running)
+            .filter(|m| {
+                m.info.project_name == project_name && m.info.status == ProcessStatus::Running
+            })
             .map(|m| &m.info)
             .max_by_key(|p| p.started_at)
     }

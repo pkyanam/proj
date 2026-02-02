@@ -64,14 +64,12 @@ async fn handle_request(
         .unwrap_or("");
 
     // Parse project name from host (e.g., "my-app.localhost:8080" -> "my-app")
-    let project_name = host
-        .split('.')
-        .next()
-        .unwrap_or("")
-        .to_string();
+    let project_name = host.split('.').next().unwrap_or("").to_string();
 
     if project_name.is_empty() || project_name == "localhost" {
-        return Ok(not_found_response("No project specified. Use <project>.localhost:8080"));
+        return Ok(not_found_response(
+            "No project specified. Use <project>.localhost:8080",
+        ));
     }
 
     // Look up the target port
@@ -95,7 +93,10 @@ async fn handle_request(
         Ok(resp) => Ok(resp),
         Err(e) => {
             tracing::error!("Failed to forward request: {}", e);
-            Ok(error_response(&format!("Failed to connect to backend: {}", e)))
+            Ok(error_response(&format!(
+                "Failed to connect to backend: {}",
+                e
+            )))
         }
     }
 }

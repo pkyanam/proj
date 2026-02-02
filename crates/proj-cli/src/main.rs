@@ -288,10 +288,7 @@ async fn cmd_new(name: String, dir: Option<PathBuf>) -> Result<()> {
             println!("  Root: {}", project.root_dir.display());
             println!();
             println!("Next steps:");
-            println!(
-                "  proj {} run <cmd>   Start a dev server",
-                project.name
-            );
+            println!("  proj {} run <cmd>   Start a dev server", project.name);
             println!(
                 "  proj {} open        Open in isolated browser",
                 project.name
@@ -547,9 +544,7 @@ async fn cmd_daemon(foreground: bool) -> Result<()> {
         tokio::time::sleep(tokio::time::Duration::from_millis(500)).await;
 
         if socket.exists() {
-            println!(
-                "\x1b[32m✓\x1b[0m Daemon started on \x1b[4mhttp://localhost:8080\x1b[0m"
-            );
+            println!("\x1b[32m✓\x1b[0m Daemon started on \x1b[4mhttp://localhost:8080\x1b[0m");
         } else {
             anyhow::bail!("Daemon failed to start. Try: proj daemon -f");
         }
@@ -568,9 +563,7 @@ async fn cmd_status() -> Result<()> {
             project_count,
             process_count,
         } => {
-            println!(
-                "\x1b[32m●\x1b[0m proj daemon running on \x1b[4mhttp://localhost:8080\x1b[0m"
-            );
+            println!("\x1b[32m●\x1b[0m proj daemon running on \x1b[4mhttp://localhost:8080\x1b[0m");
             println!(
                 "  {} project{}, {} running",
                 project_count,
@@ -662,8 +655,7 @@ fn detect_project_from_cwd() -> Result<String> {
                 let project_file = entry.path().join("project.json");
                 if project_file.exists() {
                     if let Ok(content) = std::fs::read_to_string(&project_file) {
-                        if let Ok(project) =
-                            serde_json::from_str::<proj_common::Project>(&content)
+                        if let Ok(project) = serde_json::from_str::<proj_common::Project>(&content)
                         {
                             // Check if cwd is the project root or a subdirectory
                             if cwd.starts_with(&project.root_dir) {

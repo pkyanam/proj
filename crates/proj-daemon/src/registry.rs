@@ -46,11 +46,7 @@ impl Registry {
                             self.projects.insert(project.name.clone(), project);
                         }
                         Err(e) => {
-                            tracing::warn!(
-                                "Failed to load project from {:?}: {}",
-                                project_file,
-                                e
-                            );
+                            tracing::warn!("Failed to load project from {:?}: {}", project_file, e);
                         }
                     }
                 }
@@ -116,6 +112,7 @@ impl Registry {
     }
 
     /// Get a mutable reference to a project
+    #[allow(dead_code)]
     pub fn get_mut(&mut self, name: &str) -> Option<&mut Project> {
         self.projects.get_mut(name)
     }
@@ -149,6 +146,7 @@ impl Registry {
     }
 
     /// Find project by port
+    #[allow(dead_code)]
     pub fn find_by_port(&self, port: u16) -> Option<&Project> {
         self.projects.values().find(|p| p.port == Some(port))
     }

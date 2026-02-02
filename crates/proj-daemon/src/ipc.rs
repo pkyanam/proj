@@ -30,10 +30,7 @@ impl DaemonState {
 }
 
 /// Start the IPC server
-pub async fn start_ipc_server(
-    socket_path: &Path,
-    state: Arc<Mutex<DaemonState>>,
-) -> Result<()> {
+pub async fn start_ipc_server(socket_path: &Path, state: Arc<Mutex<DaemonState>>) -> Result<()> {
     // Remove existing socket file if it exists
     if socket_path.exists() {
         tokio::fs::remove_file(socket_path)
@@ -108,10 +105,7 @@ async fn handle_connection(stream: UnixStream, state: Arc<Mutex<DaemonState>>) -
 }
 
 /// Handle an IPC request
-async fn handle_request(
-    request: IpcRequest,
-    state: Arc<Mutex<DaemonState>>,
-) -> IpcResponse {
+async fn handle_request(request: IpcRequest, state: Arc<Mutex<DaemonState>>) -> IpcResponse {
     match request {
         IpcRequest::CreateProject { name, root_dir } => {
             let mut state = state.lock().await;
@@ -193,12 +187,7 @@ async fn handle_request(
                     .into_iter()
                     .cloned()
                     .collect(),
-                None => state
-                    .process_manager
-                    .list()
-                    .into_iter()
-                    .cloned()
-                    .collect(),
+                None => state.process_manager.list().into_iter().cloned().collect(),
             };
             IpcResponse::Processes(processes)
         }

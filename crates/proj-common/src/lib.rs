@@ -78,7 +78,10 @@ pub enum IpcRequest {
         args: Vec<String>,
     },
     /// Stop a process
-    StopProcess { project_name: String, process_id: Uuid },
+    StopProcess {
+        project_name: String,
+        process_id: Uuid,
+    },
     /// List processes for a project
     ListProcesses { project_name: Option<String> },
     /// Get daemon status
